@@ -1,0 +1,25 @@
+name: test
+
+on:
+  push:
+    branches-ignore: [main, gh-pages]
+
+jobs:
+  do_test:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: setup python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    - name: Install dependencies
+      run: pip install -r requirements.txt -r requirements-dev.txt
+    - name: flake8
+      run: flake8
+    - name: run test
+      run: pytest --ff -xs --md $GITHUB_STEP_SUMMARY
+    - name: build wheel
+      run: python setup.py bdist_wheel
