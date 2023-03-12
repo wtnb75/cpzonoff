@@ -9,7 +9,7 @@ from .version import VERSION
 @click.version_option(version=VERSION, prog_name="cpzonoff")
 def cli(ctx):
     if ctx.invoked_subcommand is None:
-        print(ctx.get_help())
+        click.echo(ctx.get_help())
 
 
 @cli.command()
