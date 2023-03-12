@@ -1,0 +1,30 @@
+{% extends 'frame.j2' %}
+{% block content %}
+{% filter markdown %}
+| Project | Name | Service | State | Created | Op |
+|---------|------|---------|-------|---------|----|
+{%- for c in container %}
+{%- if c.Service == service %}
+| {{ c.Project }} | {{ c.Name }} | {{ c.Service }} | {{ c.State }}<br />{{ c.Status }} | {% if c.Created is defined %}{{ c.Created | strftime("%Y-%m-%d %H:%M:%S") }}{%endif%} | {% for b in c.buttons %}[{{b}}](/{{b}}/{{c.Service}})<br />{% endfor %}
+{%- endif %}
+{%- endfor %}
+{% endfilter %}
+
+<form method="post" action="">
+<input name="cmd" placeholder="input command" />
+<input type="submit" />
+<input type="reset" />
+</form>
+{% if command %}
+{{ command | escape }}
+<pre>
+{% for l in output %}
+{{- l |escape }}
+{% endfor %}
+</pre>
+{% endif %}
+{% endblock %}
+
+{% block title %}
+cpzonoff exec
+{% endblock %}
