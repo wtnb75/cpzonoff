@@ -1,0 +1,12 @@
+{% extends 'frame.j2' %}
+{% block content %}
+<pre>
+{% for l in data %}
+{{- l |escape }}
+{% endfor %}
+</pre>
+{% endblock %}
+
+{% block title %}
+cpzonoff logs
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'frame.j2' %}
+{% block content %}
+{% filter markdown %}
+| Project | Name | Service | State | Created | Image | Op |
+|---------|------|---------|-------|---------|-------|----|
+{%- for c in data %}
+| {{ c.Project }} | {{ c.Name }} | {{ c.Service }} | {{ c.State }}<br />{{ c.Status }} | {% if c.Created is defined %}{{ c.Created | strftime("%Y-%m-%d %H:%M:%S") }}{%endif%} | {{c.Image}} | {% for b in c.buttons %}[{{b}}]({{index_url}}{{b}}/{{c.Service}})<br />{% endfor %} |
+{%- endfor %}
+{% endfilter %}
+{% endblock %}
+
+{% block title %}
+cpzonoff
+{% endblock %}

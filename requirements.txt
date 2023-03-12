@@ -1,0 +1,5 @@
+Flask
+PyYAML
+jinja2
+click
+flask-misaka

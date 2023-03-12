@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  traefik:
+    # http://localhost/
+    image: traefik:v2.5
+    command:
+      - "--api=true"
+      - "--api.insecure=true"
+      - "--accesslog=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+  cpzonoff:
+    # http://localhost/cpzonoff
+    image: localhost:5000/wtnb75/cpzonoff
+    build: .
+    command:
+      - cpzonoff
+      - server
+      - --base-url
+      - /cpzonoff
+      - --host
+      - 0.0.0.0
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.cpzonoff.loadbalancer.server.port=8080"
+      - "traefik.http.routers.cpzonoff.rule=PathPrefix(`/cpzonoff`)"
+      - "traefik.http.routers.cpzonoff.entrypoints=web"
+    volumes:
+      - .:/w
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    working_dir: /w

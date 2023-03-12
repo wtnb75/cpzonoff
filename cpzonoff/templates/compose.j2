@@ -1,0 +1,10 @@
+{% extends 'frame.j2' %}
+{% block content %}
+<pre>
+{{ data | tojson(indent=2) | escape }}
+</pre>
+{% endblock %}
+
+{% block title %}
+cpzonoff compose
+{% endblock %}
