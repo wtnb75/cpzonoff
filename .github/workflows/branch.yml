@@ -20,6 +20,6 @@ jobs:
     - name: flake8
       run: flake8
     - name: run test
-      run: pytest --ff -xs --md $GITHUB_STEP_SUMMARY
+      run: PYTHONPATH=. pytest --ff -xs --md $GITHUB_STEP_SUMMARY
     - name: build wheel
       run: python setup.py bdist_wheel
