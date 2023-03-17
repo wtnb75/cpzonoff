@@ -18,7 +18,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
   cpzonoff:
     # http://localhost/cpzonoff
-    image: localhost:5000/wtnb75/cpzonoff
+    image: ghcr.io/wtnb75/cpzonoff:latest
     build: .
     command:
       - cpzonoff

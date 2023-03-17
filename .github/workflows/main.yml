@@ -1,0 +1,32 @@
+name: test
+
+on:
+  push:
+    branches: [main, test-build]
+
+jobs:
+  do_build_publish:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: setup python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    - name: Install dependencies
+      run: pip install -r requirements.txt -r requirements-dev.txt -r requirements-doc.txt
+    - name: build wheel
+      run: python setup.py bdist_wheel
+    - name: run test
+      run: PYTHONPATH=. pytest --ff -xs --md $GITHUB_STEP_SUMMARY
+    - name: sphinx
+      uses: ammaraskar/sphinx-action@master
+      with:
+        docs-folder: "docs/"
+    - name: deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/_build/html

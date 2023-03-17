@@ -3,6 +3,7 @@ import subprocess
 import json
 import yaml
 import os
+from typing import Union
 import shlex
 from logging import getLogger
 from flask import Flask, render_template, redirect, url_for, request
@@ -14,7 +15,8 @@ app = Flask(__name__)
 Misaka(app, tables=True)
 
 
-def str2datetime(s):
+def str2datetime(s: str) -> Union[datetime.datetime, datetime.date]:
+    """convert string to datetime"""
     if s == 'now':
         return datetime.datetime.now()
     if s == 'today':
@@ -32,7 +34,7 @@ def str2datetime(s):
 
 
 @app.template_filter()
-def strftime(value, format='iso8601'):
+def strftime(value: str, format: str = 'iso8601') -> str:
     dt = str2datetime(value)
     if format in ('iso8601', 'rfc3339'):
         return dt.isoformat()
@@ -41,7 +43,12 @@ def strftime(value, format='iso8601'):
     return dt.strftime(format)
 
 
-def do_compose(*args):
+def do_compose(*args) -> str:
+    """execute compose command
+
+    returns:
+        stdout output
+    """
     cmd = ["docker", "compose"]
     cmd.extend(args)
     _log.debug("exec command: %s", cmd)
@@ -50,7 +57,8 @@ def do_compose(*args):
     return res.stdout
 
 
-def load_compose(fnames=["docker-compose.yml"]):
+def load_compose(fnames=["docker-compose.yml"]) -> dict:
+    """load docker-compose.yml"""
     res = {}
     for f in fnames:
         fname = os.path.join(app.config.get("working_dir", os.getcwd()), f)
@@ -72,7 +80,8 @@ def load_compose(fnames=["docker-compose.yml"]):
     return res
 
 
-def get_container_data():
+def get_container_data() -> list[dict]:
+    """merge container-data and compose-file"""
     data = json.loads(do_compose("ps", "--format=json", "-a"))
     filedata = load_compose(app.config.get(
         "compose_files", ["docker-compose.yml"]))
@@ -100,7 +109,8 @@ def get_container_data():
 
 
 @app.route('/')
-def index():
+def index() -> str:
+    """index page"""
     data = get_container_data()
     return render_template(
         'index.j2', data=data,
@@ -109,6 +119,7 @@ def index():
 
 @app.route("/up/<string:service>")
 def do_up(service):
+    """execute docker compose up"""
     do_compose("up", "-d", service)
     return redirect(url_for('index'))
 

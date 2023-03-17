@@ -13,13 +13,14 @@ def cli(ctx):
 
 
 @cli.command()
-@click.option("--base-url")
+@click.option("--base-url", help="URL prefix")
 @click.option("--verbose/--quiet")
 @click.option("--debug/--no-debug", default=False)
 @click.option("--config", type=click.File('r'))
-@click.option("--host", default="localhost")
-@click.option("--port", type=int, default=8080)
+@click.option("--host", default="localhost", help="listen host")
+@click.option("--port", type=int, default=8080, help="listen port")
 def server(base_url, config, verbose, host, port, debug):
+    """boot server"""
     if config:
         conf = yaml.safe_load(config)
     else:
