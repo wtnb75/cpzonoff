@@ -4,6 +4,11 @@ on:
   push:
     branches: [main, test-build]
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   do_build_publish:
 
