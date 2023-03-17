@@ -25,6 +25,7 @@ jobs:
       uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "docs/"
+        pre-build-command: "pip install -r requirements-doc.txt"
     - name: deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
