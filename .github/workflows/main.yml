@@ -27,10 +27,9 @@ jobs:
     - name: run test
       run: PYTHONPATH=. pytest --ff -xs --md $GITHUB_STEP_SUMMARY
     - name: sphinx
-      uses: ammaraskar/sphinx-action@master
-      with:
-        docs-folder: "docs/"
-        pre-build-command: "pip install -r requirements-doc.txt -r requirements.txt"
+      run: |
+        cd docs
+        make html
     - name: Setup Pages
       uses: actions/configure-pages@v3
     - name: Upload artifact
