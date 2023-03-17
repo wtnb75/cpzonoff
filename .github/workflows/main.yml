@@ -1,0 +1,41 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  do_build_publish:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: setup python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    - name: Install dependencies
+      run: pip install -r requirements.txt -r requirements-dev.txt -r requirements-doc.txt
+    - name: build wheel
+      run: python setup.py bdist_wheel
+    - name: run test
+      run: PYTHONPATH=. pytest --ff -xs --md $GITHUB_STEP_SUMMARY
+    - name: sphinx
+      run: |
+        cd docs
+        make html
+    - name: Setup Pages
+      uses: actions/configure-pages@v3
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: './docs/_build/html'
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v1

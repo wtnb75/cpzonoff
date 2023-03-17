@@ -3,3 +3,4 @@ pytest-cov
 pytest-md
 flake8
 wheel
+twine
