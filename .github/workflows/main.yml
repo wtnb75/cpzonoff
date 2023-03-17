@@ -30,6 +30,7 @@ jobs:
       run: |
         cd docs
         make html
+        find _build -ls
     - name: Setup Pages
       uses: actions/configure-pages@v3
     - name: Upload artifact
